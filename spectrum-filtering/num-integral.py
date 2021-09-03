@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.polynomial.legendre import leggauss
-
+from spfilter import contour_filter
 
 if False:
     n = 5
@@ -47,7 +47,7 @@ if False:
 
         print("n = {}, int_val = {:.4f}, int_val - 2pi = {:.4f}".format(n, int_val, np.abs(int_val) - 2 * np.pi))
 
-if True:
+if False:
     fz = lambda z: 1 / (z**2 + 1) / (z**2 + 1)
     ref_val = np.pi / 2
     x_max = .5
@@ -85,7 +85,7 @@ if True:
     x_min = -2.1
     r = (x_max - x_min) / 2  
     print("r = ", r)
-    for n in range(1, 30, 4):
+    for n in range(1, 30, 5):
         x_gl, w_gl = leggauss(n)
         
         # 0 to pi
@@ -107,3 +107,34 @@ if True:
 
         int_val = int_val_1 + int_val_2
         print("n = {}, int_val = {:.4f}, int_val - ref = {:.4f}".format(n, int_val, np.abs(int_val) - ref_val))            
+
+
+if True:
+    ref_val = np.pi / 2
+    x_min = -2.1
+    x_max =  2.1
+    r = (x_max - x_min) / 2
+
+    for n in range(1, 30, 5):
+        # 0 to pi
+        int_lim_1 = 0
+        int_lim_2 = np.pi        
+        z = lambda theta: (x_max + x_min) / 2 + r * np.exp(1j * theta)
+        fz = lambda theta: 1 / (z(theta)**2 + 1) / (z(theta)**2 + 1)
+        dz = lambda theta: 1j * r * np.exp(1j * theta)        
+        int_val_1 = contour_filter(n, int_lim_1, int_lim_2, dz, fz)
+        # -a to a
+        int_lim_1 = x_min
+        int_lim_2 = x_max       
+        z = lambda x: x
+        fz = lambda x: 1 / (z(x)**2 + 1) / (z(x)**2 + 1)
+        dz = lambda x: 1
+        int_val_2 = contour_filter(n, int_lim_1, int_lim_2, dz, fz)
+
+        int_val = int_val_1 + int_val_2
+        print("n = {}, int_val = {:.4f}, int_val - ref = {:.4f}".format(n, int_val, np.abs(int_val - ref_val)))            
+
+
+
+
+

@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import linalg
 from scipy.stats import ortho_group
-
+from numpy.polynomial.legendre import leggauss
 
 default_seed = 1000
 
@@ -83,6 +83,21 @@ def memoized_power_filter(n, D={}):
             results = lambda h, x: np.dot(h, power_filter(n-1)(x))        
     D[n] = results
     return D
+
+
+# ==============
+# Contour filter
+# ==============
+def contour_filter(n, int_lim_1, int_lim_2, dz, fz):
+    x_lg, w_lg = leggauss(n)
+    int_val = 0
+    for x_i, w_i in zip(x_lg, w_lg):
+        t_i = (int_lim_2 - int_lim_1) / 2 * x_i + (int_lim_2 + int_lim_1) / 2
+        fz_i = fz(t_i)
+        dz_i = dz(t_i) * (int_lim_2 - int_lim_1) / 2
+
+        int_val += w_i * fz_i * dz_i
+    return int_val
 
 # =======================
 # Transformation matrices
