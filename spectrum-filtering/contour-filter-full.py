@@ -12,7 +12,7 @@ spectrum = np.linspace(-1, 1, 10)
 s = Spectrum(spectrum, seed=rand_seed)
 h = s.orth_rep
 eigvals, eigvecs = LA.eigh(h)
-# print(h)
+print(h)
 
 n_occ = 5
 lbound_ind = 5

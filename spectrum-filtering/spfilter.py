@@ -127,11 +127,11 @@ def linear_map(lower_b, upper_b):
 def subspace_proj(h, basis):
     h = np.dot(h, basis)
     if np.any(np.iscomplex(basis)):
-        print("IS COMPLEX")
+        # print("IS COMPLEX")
         basis = np.conjugate(basis)
     h = np.dot(basis.T, h)
     if np.any(np.iscomplex(h)):
-        print("IS COMPLEX")
+        # print("IS COMPLEX")
         return .5 * (h + np.conjugate(h.T))
     else:
         return .5 * (h + h.T)
